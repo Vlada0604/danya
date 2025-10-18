@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Каталог - GlowUp</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">GlowUp</div>
+            <ul>
+                <li><a href="index.html">Головна</a></li>
+                <li><a href="catalog.html">Каталог</a></li>
+                <li><a href="cart.html">Кошик (<span id="cart-count">0</span>)</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="catalog-page">
+        <h1>Широкий Каталог Доглядової Косметики</h1>
+
+        <div class="filter-sidebar">
+            <h3>Фільтри</h3>
+            <ul>
+                <li><input type="checkbox" id="face"><label for="face">Для обличчя</label></li>
+                <li><input type="checkbox" id="body"><label for="body">Для тіла</label></li>
+                <li><input type="checkbox" id="hair"><label for="hair">Для волосся</label></li>
+            </ul>
+            <h4>Ціна:</h4>
+            <input type="range" min="100" max="2000" value="2000" id="price-range">
+            <p>До: <span id="price-value">2000</span> грн</p>
+        </div>
+
+        <div class="catalog-grid" id="product-catalog">
+            </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 GlowUp. Всі права захищені.</p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Невелика функція для відображення ціни діапазону
+        document.getElementById('price-range').addEventListener('input', (e) => {
+            document.getElementById('price-value').textContent = e.target.value;
+        });
+    </script>
+</body>
+</html>
