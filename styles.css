@@ -84,6 +84,8 @@ main {
     font-size: 2.5em;
 }
 
+/* ... (початок файлу без змін) ... */
+
 /* Product Cards (index.html та catalog.html) */
 .featured-products h2, .catalog-page h1 {
     text-align: center;
@@ -91,17 +93,39 @@ main {
     color: #555;
 }
 
-/* *** ВИПРАВЛЕНО: GRID ДЛЯ АВТОМАТИЧНОГО ПЕРЕНЕСЕННЯ *** */
-.product-list, .catalog-grid {
+/* *** ВИПРАВЛЕНО: ГАРАНТОВАНА СІТКА З АВТОПЕРЕНОСОМ *** */
+
+/* Це для Головної сторінки (index.html) */
+.product-list {
     display: grid;
-    /* auto-fit/minmax забезпечує: рядкове розміщення, автоматичний перенос
-       і мінімальну ширину 250px для кожної картки */
+    /* auto-fit/minmax: рядкове розміщення, автоперенос, мін. ширина 250px */
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+}
+
+/* Catalog Page Specifics (Макет сторінки: бічна панель + вміст) */
+.catalog-page {
+    display: grid;
+    /* 250px для бічної панелі, 1fr для гнучкої колонки з товарами */
+    grid-template-columns: 250px 1fr;
+    gap: 30px;
+}
+
+/* Це для сторінки Каталогу (catalog.html) */
+.catalog-grid {
+    display: grid;
+    /* auto-fit/minmax: це має примусово переносити товари на новий рядок! */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
     gap: 25px;
 }
 /* ******************************************************* */
 
+
 .product-card {
+    /* Тут картка має просто заповнити комірку сітки */
+    width: 100%; 
+    height: auto; /* Додано, щоб уникнути конфліктів */
+    
     background-color: white;
     padding: 20px;
     border-radius: 10px;
