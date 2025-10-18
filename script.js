@@ -1,11 +1,11 @@
 // Глобальний список товарів для Каталогу
 const products = [
-    { id: 1, name: "Крем Гіалурон", price: 650, category: "face", image: 
+    { id: 1, name: "Крем Гіалурон", price: 650, category: "face", image: "images/product-1.jpg" },
     { id: 2, name: "Сироватка Віт. C", price: 890, category: "face", image: "images/product-2.jpg" },
-    { id: 3, name: "Гель для душу 'Океан'", price: 250, category: "body", image: https://profistyle.in.ua/image/cache/catalog/Brendj/Christina/crs3706_result-326x326.webp"images/product-3.jpg" },
-    { id: 4, name: "Маска для волосся з кератином", price: 580, category: "hair",https://hair-expert.com.ua/image/cache/catalog/import_yml/104/110/989/531/kaypro-keratin-speci-450x450.jpg
-    { id: 5, name: "Нічний крем-регенератор", price: 920, category: "face",https://cosmeticus.com.ua/files/resized/products/10057-pelart-laboratory-trifolium-pretense-collagen-night-cream-50-01.1200x1200.webp
-    { id: 6, name: "Скраб для тіла з кавою", price: 340, category: "body", https://tinitun.com.ua/files/resized/products/img_4795.1200x1200.jpg-1.1200x1200.webp
+    { id: 3, name: "Гель для душу 'Океан'", price: 250, category: "body", image: "images/product-3.jpg" },
+    { id: 4, name: "Маска для волосся з кератином", price: 580, category: "hair", image: "images/product-4.jpg" },
+    { id: 5, name: "Нічний крем-регенератор", price: 920, category: "face", image: "images/product-5.jpg" },
+    { id: 6, name: "Скраб для тіла з кавою", price: 340, category: "body", image: "images/product-6.jpg" }
     // Додайте більше товарів тут
 ];
 
