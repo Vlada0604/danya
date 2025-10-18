@@ -1,4 +1,4 @@
-// Глобальний список товарів для Каталогу
+// Глобальний список товарів залишимо, оскільки його ID потрібні для кошика, але генерацію видаляємо
 const products = [
     { id: 1, name: "Крем Гіалурон", price: 650, category: "face", image: "images/product-1.jpg" },
     { id: 2, name: "Сироватка Віт. C", price: 890, category: "face", image: "images/product-2.jpg" },
@@ -6,7 +6,6 @@ const products = [
     { id: 4, name: "Маска для волосся з кератином", price: 580, category: "hair", image: "images/product-4.jpg" },
     { id: 5, name: "Нічний крем-регенератор", price: 920, category: "face", image: "images/product-5.jpg" },
     { id: 6, name: "Скраб для тіла з кавою", price: 340, category: "body", image: "images/product-6.jpg" }
-    // Додайте більше товарів тут
 ];
 
 // 1. Функції для роботи з кошиком (LocalStorage)
@@ -56,7 +55,7 @@ function changeQuantity(productId, newQuantity) {
         }
     }
     saveCart(cart);
-    // *** ВИПРАВЛЕНО: обов'язковий рендеринг кошика після зміни кількості
+    // Обов'язковий рендеринг кошика після зміни кількості
     if (document.getElementById('cart-items-container')) {
         renderCart(); 
     }
@@ -81,6 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateCartCount(); // Ініціалізуємо лічильник кошика
 
     // Обробник для кнопок "Додати в кошик" (на index.html та catalog.html)
+    // *** ЦЕЙ ОБРОБНИК КРИТИЧНО ВАЖЛИВИЙ, Оскільки він працює зі статичними кнопками ***
     document.body.addEventListener('click', (e) => {
         if (e.target.classList.contains('add-to-cart-btn')) {
             const id = parseInt(e.target.dataset.id);
@@ -90,58 +90,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 3. Функції для сторінки КАТАЛОГУ
-    const catalogContainer = document.getElementById('product-catalog');
-    const priceRange = document.getElementById('price-range');
+    // *** Видалено функції renderCatalog та логіку фільтрів, оскільки товари тепер статичні в HTML ***
+    // const catalogContainer = document.getElementById('product-catalog');
+    // if (catalogContainer) { ... }
     
-    if (catalogContainer) {
-        renderCatalog(); // Відображаємо всі товари
-        
-        // *** НОВИЙ КОД: Обробники фільтрів ***
-        const filterElements = document.querySelectorAll('.filter-sidebar input[type="checkbox"], #price-range');
-        filterElements.forEach(element => {
-            element.addEventListener('change', renderCatalog);
-            element.addEventListener('input', renderCatalog); // Для range input
-        });
-    }
-
-    function renderCatalog() {
-        if (!catalogContainer) return;
-        
-        // Отримання поточних значень фільтрів
-        const selectedCategories = Array.from(document.querySelectorAll('.filter-sidebar input[type="checkbox"]:checked'))
-                                      .map(checkbox => checkbox.id);
-        const maxPrice = parseFloat(priceRange.value);
-
-        // Фільтрація товарів
-        const filteredProducts = products.filter(product => {
-            const categoryMatch = selectedCategories.length === 0 || selectedCategories.includes(product.category);
-            const priceMatch = product.price <= maxPrice;
-            return categoryMatch && priceMatch;
-        });
-        
-        catalogContainer.innerHTML = ''; // Очищаємо перед рендерингом
-
-        if (filteredProducts.length === 0) {
-             catalogContainer.innerHTML = '<p style="grid-column: 1 / -1; text-align: center;">Товарів, що відповідають вашим фільтрам, не знайдено.</p>';
-             return;
-        }
-        
-        filteredProducts.forEach(product => {
-            const card = document.createElement('div');
-            card.classList.add('product-card');
-            card.innerHTML = `
-                <img src="${product.image}" alt="${product.name}">
-                <h3>${product.name}</h3>
-                <p>${product.price} грн</p>
-                <button class="button add-to-cart-btn" data-id="${product.id}" data-name="${product.name}" data-price="${product.price}">
-                    Додати в кошик
-                </button>
-            `;
-            catalogContainer.appendChild(card);
-        });
-    }
-
     // 4. Функції для сторінки КОШИКА
     const cartContainer = document.getElementById('cart-items-container');
     const cartTotalElement = document.getElementById('cart-total');
