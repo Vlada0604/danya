@@ -59,7 +59,49 @@ nav ul a {
 }
 
 /* ================================== */
-/* СТИЛІ ДЛЯ СТОРІНКИ КАТАЛОГУ (ВИПРАВЛЕНО) */
+/* СТИЛІ ДЛЯ ГОЛОВНОЇ СТОРІНКИ (index.html) */
+/* ================================== */
+
+.homepage {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 5%;
+}
+
+.hero {
+    background-color: #ffeef2;
+    padding: 50px;
+    text-align: center;
+    border-radius: 10px;
+    margin-bottom: 40px;
+}
+
+.hero h1 {
+    color: #ff69b4;
+    font-size: 2.5em;
+}
+
+.featured-products {
+    text-align: center;
+}
+
+.featured-products h2 {
+    color: #ff69b4;
+    margin-bottom: 30px;
+}
+
+/* !!! ВИПРАВЛЕННЯ: ЗАСТОСУВАННЯ FLEXBOX ДЛЯ ТОВАРІВ НА ГОЛОВНІЙ СТОРІНЦІ !!! */
+.product-list {
+    display: flex; 
+    justify-content: space-around; 
+    gap: 20px; 
+    flex-wrap: wrap;
+    padding: 0; 
+    list-style: none;
+}
+
+/* ================================== */
+/* СТИЛІ ДЛЯ СТОРІНКИ КАТАЛОГУ (catalog.html) */
 /* ================================== */
 
 /* Головний контейнер: розміщення фільтрів та товарів поруч */
@@ -67,15 +109,14 @@ nav ul a {
     max-width: 1200px;
     margin: 30px auto;
     padding: 0 5%;
-    display: grid; /* Вмикаємо Grid для головної сторінки */
-    /* Визначаємо стовпці: 250px для фільтрів, решта для каталогу */
-    grid-template-columns: 250px 1fr; 
+    display: grid; 
+    grid-template-columns: 250px 1fr; /* 250px для фільтрів, решта для каталогу */
     gap: 30px;
 }
 
 /* Заголовок займає всю ширину */
 .catalog-page h1 {
-    grid-column: 1 / -1; /* Починається в 1-й колонці, закінчується перед останньою */
+    grid-column: 1 / -1; 
     margin-top: 0;
     margin-bottom: 20px;
     color: #ff69b4;
@@ -104,20 +145,20 @@ nav ul a {
     width: 100%;
 }
 
-/* СІТКА ТОВАРІВ (найважливіше для багаторядкового відображення) */
+/* СІТКА ТОВАРІВ У КАТАЛОЗІ */
 .catalog-content {
-    /* Цей блок займає 1fr і містить сітку */
+    /* Контейнер для сітки товарів */
 }
 
 .catalog-grid {
-    display: grid; /* Вмикаємо Grid для карток товарів */
-    /* Автоматичне створення стовпців: 
-       мінімум 250px, максимально 1fr (розтягуються) */
+    display: grid; 
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
-    gap: 20px; /* Відстань між картками */
+    gap: 20px; 
 }
 
-/* Стилі для картки товару */
+/* ================================== */
+/* ЗАГАЛЬНІ СТИЛІ КАРТКИ ТОВАРУ */
+/* ================================== */
 .product-card {
     background-color: white;
     padding: 15px;
@@ -125,6 +166,10 @@ nav ul a {
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     text-align: center;
     transition: transform 0.2s;
+    /* Важливо для flexbox на головній, щоб вони були однакової висоти */
+    display: flex; 
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .product-card:hover {
@@ -134,13 +179,114 @@ nav ul a {
 
 .product-card img {
     max-width: 100%;
-    height: 200px; /* Фіксована висота для однакового вигляду */
+    height: 200px; 
     object-fit: cover;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-/* Footer (залишити без змін) */
+.product-card p {
+    font-weight: bold;
+    color: #ff69b4;
+}
+
+.product-card button {
+    margin-top: auto; /* Притискає кнопку до низу, якщо картки різної висоти */
+}
+
+
+/* ================================== */
+/* СТИЛІ ДЛЯ КОШИКА (cart.html) */
+/* ================================== */
+
+.cart-page {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 0 5%;
+}
+
+.cart-items, .checkout-form {
+    margin-bottom: 30px;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.cart-item:last-child {
+    border-bottom: none;
+}
+
+.item-info {
+    flex-grow: 1;
+}
+
+.item-info h4 {
+    margin: 0;
+    color: #555;
+}
+
+.item-quantity input {
+    width: 50px;
+    padding: 5px;
+    text-align: center;
+    margin: 0 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.remove-item-btn {
+    background-color: #f44336;
+    padding: 5px 10px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.cart-summary {
+    background-color: #ffeef2;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: right;
+    margin-bottom: 30px;
+}
+
+.checkout-form {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.checkout-form label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.checkout-form input[type="text"], 
+.checkout-form input[type="email"], 
+.checkout-form input[type="tel"],
+.checkout-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box; /* Важливо для коректної ширини */
+}
+
+.checkout-form button {
+    margin-top: 20px;
+    width: 100%;
+}
+
+/* Footer */
 footer {
     text-align: center;
     padding: 20px;
@@ -148,30 +294,3 @@ footer {
     color: white;
     margin-top: 50px;
 }
-
-
-/* ================================== */
-/* СТИЛІ ДЛЯ ГОЛОВНОЇ СТОРІНКИ (index.html) (залишити без змін, якщо не було інших правок) */
-/* ================================== */
-
-.hero {
-    /* ... стилі hero */
-}
-
-.product-list {
-    /* ... стилі product-list */
-}
-
-/* ================================== */
-/* СТИЛІ ДЛЯ КОШИКА (cart.html) (залишити без змін, якщо не було інших правок) */
-/* ================================== */
-
-.cart-page {
-    /* ... стилі cart-page */
-}
-
-.cart-item {
-    /* ... стилі cart-item */
-}
-
-/* ... інші стилі */
