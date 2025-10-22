@@ -90,15 +90,21 @@ nav ul a {
     margin-bottom: 30px;
 }
 
-/* !!! ВИПРАВЛЕННЯ ДЛЯ index.html: FLEXBOX В ОДИН РЯД !!! */
+/* !!! КРИТИЧНЕ ВИПРАВЛЕННЯ: ЗАСТОСУВАННЯ FLEXBOX ДЛЯ index.html !!! */
 .product-list {
     display: flex; 
-    justify-content: space-around; 
+    justify-content: space-between; /* Розподіл простору між елементами */
     gap: 20px; 
-    flex-wrap: wrap;
+    flex-wrap: wrap; /* Дозволяє переносити на нові рядки */
     padding: 0; 
     list-style: none;
 }
+/* Забезпечуємо, щоб картки займали рівномірну ширину, не більше 30% */
+.product-list .product-card {
+    flex: 0 1 30%; /* База 0, розширення 1, не більше 30% ширини контейнера */
+    min-width: 250px;
+}
+
 
 /* ================================== */
 /* СТИЛІ ДЛЯ СТОРІНКИ КАТАЛОГУ (catalog.html) */
@@ -166,7 +172,7 @@ nav ul a {
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     text-align: center;
     transition: transform 0.2s;
-    /* Важливо для вирівнювання кнопок внизу картки */
+    /* Налаштування Flex для вмісту самої картки */
     display: flex; 
     flex-direction: column;
     justify-content: space-between;
