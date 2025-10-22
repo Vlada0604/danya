@@ -1,4 +1,4 @@
-// Глобальний список товарів залишимо, оскільки його ID потрібні для кошика, але генерацію видаляємо
+// Глобальний список товарів (використовується для фільтрації та кошика)
 const products = [
     { id: 1, name: "Крем Гіалурон", price: 650, category: "face", image: "images/product-1.jpg" },
     { id: 2, name: "Сироватка Віт. C", price: 890, category: "face", image: "images/product-2.jpg" },
@@ -15,7 +15,7 @@ function getCart() {
 
 function saveCart(cart) {
     localStorage.setItem('cosmeticsCart', JSON.stringify(cart));
-    updateCartCount(); // Оновлення лічильника щоразу при збереженні
+    updateCartCount();
 }
 
 function updateCartCount() {
@@ -50,12 +50,10 @@ function changeQuantity(productId, newQuantity) {
         if (quantity > 0) {
             item.quantity = quantity;
         } else {
-            // Видаляємо товар, якщо кількість <= 0
             cart = cart.filter(i => i.id !== productId);
         }
     }
     saveCart(cart);
-    // Обов'язковий рендеринг кошика після зміни кількості
     if (document.getElementById('cart-items-container')) {
         renderCart(); 
     }
@@ -74,13 +72,78 @@ function clearCart() {
     alert('Кошик очищено!');
 }
 
+// ===========================================
+// 3. ЛОГІКА ФІЛЬТРАЦІЇ ТА ВІДОБРАЖЕННЯ КАТАЛОГУ
+// ===========================================
+const catalogContainer = document.getElementById('product-catalog');
+const priceRange = document.getElementById('price-range');
+
+function applyFilters() {
+    if (!catalogContainer) return;
+
+    // 1. Отримання обраних категорій
+    const categoryCheckboxes = document.querySelectorAll('.filter-sidebar input[type="checkbox"]');
+    const selectedCategories = Array.from(categoryCheckboxes)
+        .filter(cb => cb.checked)
+        .map(cb => cb.id); // face, body, hair
+
+    // 2. Отримання максимальної ціни
+    const maxPrice = parseFloat(priceRange ? priceRange.value : 1000); 
+
+    // 3. Фільтрація статичних карток товарів
+    const productCards = catalogContainer.querySelectorAll('.product-card');
+    let foundProducts = 0;
+
+    productCards.forEach(card => {
+        const addToCartBtn = card.querySelector('.add-to-cart-btn');
+        if (!addToCartBtn) return;
+        
+        const productId = parseInt(addToCartBtn.dataset.id);
+        const product = products.find(p => p.id === productId);
+        
+        if (!product) return; 
+
+        // Перевірка відповідності фільтрам
+        const categoryMatch = selectedCategories.length === 0 || selectedCategories.includes(product.category);
+        const priceMatch = product.price <= maxPrice;
+
+        if (categoryMatch && priceMatch) {
+            // Товар відповідає - показуємо його
+            card.style.display = 'block'; 
+            foundProducts++;
+        } else {
+            // Товар не відповідає - приховуємо
+            card.style.display = 'none';
+        }
+    });
+
+    // 4. Управління повідомленням про відсутність результатів
+    let noResultsMessage = document.getElementById('no-results-message');
+    
+    if (foundProducts === 0) {
+        if (!noResultsMessage) {
+            const msg = document.createElement('p');
+            msg.id = 'no-results-message';
+            msg.style.gridColumn = '1 / -1'; 
+            msg.style.textAlign = 'center';
+            msg.style.color = '#ff69b4';
+            msg.textContent = 'Товарів за вибраними фільтрами не знайдено.';
+            catalogContainer.appendChild(msg);
+            noResultsMessage = msg;
+        }
+        noResultsMessage.style.display = 'block';
+    } else {
+        if (noResultsMessage) {
+            noResultsMessage.style.display = 'none';
+        }
+    }
+}
 
 // 2. Ініціалізація та обробники подій
 document.addEventListener('DOMContentLoaded', () => {
-    updateCartCount(); // Ініціалізуємо лічильник кошика
+    updateCartCount();
 
-    // Обробник для кнопок "Додати в кошик" (на index.html та catalog.html)
-    // *** ЦЕЙ ОБРОБНИК КРИТИЧНО ВАЖЛИВИЙ, Оскільки він працює зі статичними кнопками ***
+    // Обробник для кнопок "Додати в кошик"
     document.body.addEventListener('click', (e) => {
         if (e.target.classList.contains('add-to-cart-btn')) {
             const id = parseInt(e.target.dataset.id);
@@ -90,11 +153,32 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // *** Видалено функції renderCatalog та логіку фільтрів, оскільки товари тепер статичні в HTML ***
-    // const catalogContainer = document.getElementById('product-catalog');
-    // if (catalogContainer) { ... }
-    
-    // 4. Функції для сторінки КОШИКА
+    // *** ІНІЦІАЛІЗАЦІЯ ФІЛЬТРІВ КАТАЛОГУ ***
+    if (catalogContainer) {
+        // Обробник для зміни категорій
+        document.querySelectorAll('.filter-sidebar input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', applyFilters);
+        });
+
+        // Обробник для зміни цінового діапазону
+        if(priceRange) {
+            priceRange.addEventListener('input', () => {
+                document.getElementById('price-value').textContent = priceRange.value;
+                applyFilters();
+            });
+            const priceValueDisplay = document.getElementById('price-value');
+            if (priceValueDisplay) {
+                priceValueDisplay.textContent = priceRange.value;
+            }
+        }
+        
+        // !!! ЦЕЙ ВИКЛИК ПОКАЗУЄ ВСІ ТОВАРИ ПРИ ЗАВАНТАЖЕННІ І АКТИВУЄ ФІЛЬТРИ !!!
+        applyFilters(); 
+    }
+    // *** КІНЕЦЬ ЛОГІКИ ФІЛЬТРІВ КАТАЛОГУ ***
+
+
+    // 4. Функції для сторінки КОШИКА (залишаємо без змін)
     const cartContainer = document.getElementById('cart-items-container');
     const cartTotalElement = document.getElementById('cart-total');
     const orderForm = document.getElementById('order-form');
@@ -102,7 +186,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (cartContainer) {
         renderCart();
 
-        // Обробник змін кількості
         cartContainer.addEventListener('input', (e) => {
             if (e.target.classList.contains('item-quantity-input')) {
                 const id = parseInt(e.target.dataset.id);
@@ -111,7 +194,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Обробник видалення товару
         cartContainer.addEventListener('click', (e) => {
             if (e.target.classList.contains('remove-item-btn')) {
                 const id = parseInt(e.target.dataset.id);
@@ -119,7 +201,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Обробник очищення кошика
         const clearCartButton = document.querySelector('.clear-cart-btn');
         if(clearCartButton) clearCartButton.addEventListener('click', clearCart);
     }
@@ -128,7 +209,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderCart() {
         const cart = getCart();
         
-        // Перевірка, чи елементи існують на сторінці (для уникнення помилок)
         if (!cartContainer || !cartTotalElement) return;
         
         cartContainer.innerHTML = '';
@@ -137,7 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (cart.length === 0) {
             cartContainer.innerHTML = '<p>Ваш кошик порожній. Перейдіть до <a href="catalog.html">каталогу</a>, щоб додати товари.</p>';
             cartTotalElement.textContent = '0.00';
-            if(orderForm) orderForm.style.display = 'none'; // Ховаємо форму, якщо кошик порожній
+            if(orderForm) orderForm.style.display = 'none';
             return;
         }
 
@@ -166,7 +246,7 @@ document.addEventListener('DOMContentLoaded', () => {
             cartContainer.appendChild(itemElement);
         });
 
-        cartTotalElement.textContent = total.toFixed(2); // Оновлення загальної суми
+        cartTotalElement.textContent = total.toFixed(2);
     }
     
     // 5. Обробник ОФОРМЛЕННЯ ЗАМОВЛЕННЯ
@@ -180,7 +260,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             
-            // Збір даних
             const formData = {
                 name: document.getElementById('name').value,
                 email: document.getElementById('email').value,
@@ -190,14 +269,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 total: parseFloat(document.getElementById('cart-total').textContent)
             };
             
-            // Імітація успішного оформлення
             console.log('Оформлення замовлення:', formData);
 
             document.getElementById('order-message').style.display = 'block';
             orderForm.reset();
-            clearCart(); // Очищення кошика після успішного оформлення
+            clearCart();
             
-            // Приховати повідомлення через 5 секунд
             setTimeout(() => {
                 document.getElementById('order-message').style.display = 'none';
             }, 5000);
