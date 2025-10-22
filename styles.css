@@ -90,7 +90,7 @@ nav ul a {
     margin-bottom: 30px;
 }
 
-/* !!! ВИПРАВЛЕННЯ: ЗАСТОСУВАННЯ FLEXBOX ДЛЯ ТОВАРІВ НА ГОЛОВНІЙ СТОРІНЦІ !!! */
+/* !!! ВИПРАВЛЕННЯ ДЛЯ index.html: FLEXBOX В ОДИН РЯД !!! */
 .product-list {
     display: flex; 
     justify-content: space-around; 
@@ -157,7 +157,7 @@ nav ul a {
 }
 
 /* ================================== */
-/* ЗАГАЛЬНІ СТИЛІ КАРТКИ ТОВАРУ */
+/* ЗАГАЛЬНІ СТИЛІ КАРТКИ ТОВАРУ (Спільні для index.html та catalog.html) */
 /* ================================== */
 .product-card {
     background-color: white;
@@ -166,7 +166,7 @@ nav ul a {
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     text-align: center;
     transition: transform 0.2s;
-    /* Важливо для flexbox на головній, щоб вони були однакової висоти */
+    /* Важливо для вирівнювання кнопок внизу картки */
     display: flex; 
     flex-direction: column;
     justify-content: space-between;
@@ -191,7 +191,7 @@ nav ul a {
 }
 
 .product-card button {
-    margin-top: auto; /* Притискає кнопку до низу, якщо картки різної висоти */
+    margin-top: auto; /* Притискає кнопку до низу */
 }
 
 
@@ -278,12 +278,18 @@ nav ul a {
     margin-top: 5px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    box-sizing: border-box; /* Важливо для коректної ширини */
+    box-sizing: border-box; 
 }
 
 .checkout-form button {
     margin-top: 20px;
     width: 100%;
+}
+
+#order-message {
+    color: green; 
+    display: none; 
+    margin-top: 15px;
 }
 
 /* Footer */
